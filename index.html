@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Feedback System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>How Was Your Experience?</h1>
+    <p class="subtitle">Your feedback helps us improve!</p>
+
+    <!-- Star Rating -->
+    <div class="stars" id="stars">
+      <span data-value="1" class="star">&#9734;</span>
+      <span data-value="2" class="star">&#9734;</span>
+      <span data-value="3" class="star">&#9734;</span>
+      <span data-value="4" class="star">&#9734;</span>
+      <span data-value="5" class="star">&#9734;</span>
+    </div>
+    
+    <!-- Name Input -->
+    <input type="text" id="name" placeholder="Enter your name" class="input-field" style="display:none;" />
+    
+    <!-- Review Input -->
+    <textarea id="review" placeholder="Write your review here..." class="input-field" style="display:none;"></textarea>
+    
+    <!-- Submit Button -->
+    <button id="submit" style="display:none;">Submit Feedback</button>
+    <div id="message" class="message"></div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import the functions you need from the Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCa08VA0AyJ08or6NACYGWiYfdeTP147Jk",
+      authDomain: "rating-1a952.firebaseapp.com",
+      projectId: "rating-1a952",
+      storageBucket: "rating-1a952.firebasestorage.app",
+      messagingSenderId: "753479569571",
+      appId: "1:753479569571:web:af92b64d68a05fd5a2af16",
+      measurementId: "G-Y47E61Y5VE"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // DOM Elements
+    const stars = document.querySelectorAll(".star");
+    const submitButton = document.getElementById("submit");
+    const nameInput = document.getElementById("name");
+    const reviewInput = document.getElementById("review");
+    const messageDiv = document.getElementById("message");
+
+    let selectedRating = 0;
+
+    // Handle star selection
+    stars.forEach(star => {
+      star.addEventListener("click", () => {
+        selectedRating = parseInt(star.getAttribute("data-value"));
+        stars.forEach(s => s.classList.remove("selected")); // Remove previous selections
+        for (let i = 0; i < selectedRating; i++) {
+          stars[i].classList.add("selected"); // Add selected class to clicked stars
+        }
+
+        // Show or hide name, review, and submit based on rating
+        if (selectedRating === 4 || selectedRating === 5) {
+          // Redirect to Google Review page
+          setTimeout(() => {
+            window.location.href = "https://g.page/Geethanjali-Silks-Udupi/review?rc"; // Replace with your business's Google Review link
+          }, 1000); // Delay for 1 second to allow the user to see the star selection
+        } else {
+          nameInput.style.display = "block"; // Show name input
+          reviewInput.style.display = "block"; // Show review textarea
+          submitButton.style.display = "block"; // Show submit button
+        }
+      });
+    });
+
+    // Handle form submission
+    submitButton.addEventListener("click", async () => {
+      const name = nameInput.value.trim();
+      const review = reviewInput.value.trim();
+      messageDiv.textContent = ""; // Clear previous message
+
+      // Validate inputs
+      if (!name) {
+        messageDiv.textContent = "Please enter your name.";
+        messageDiv.style.color = "red";
+        return;
+      }
+
+      if (!review) {
+        messageDiv.textContent = "Please write a review.";
+        messageDiv.style.color = "red";
+        return;
+      }
+
+      if (selectedRating === 0) {
+        messageDiv.textContent = "Please select a rating before submitting!";
+        messageDiv.style.color = "red";
+        return;
+      }
+
+      try {
+        // Save feedback to Firestore
+        await addDoc(collection(db, "reviews"), {
+          name: name,
+          review: review,
+          rating: selectedRating,
+          timestamp: new Date().toISOString(),
+        });
+
+        // Success message
+        messageDiv.textContent = `Thank you for your feedback, ${name}!`;
+        messageDiv.style.color = "#007bff";
+
+        // Clear form fields after submission
+        nameInput.value = "";
+        reviewInput.value = "";
+        stars.forEach(s => s.classList.remove("selected"));
+        selectedRating = 0;
+
+      } catch (error) {
+        messageDiv.textContent = "Failed to submit feedback. Please try again.";
+        messageDiv.style.color = "red";
+        console.error("Error adding document: ", error);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+/* General styles */
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #007bff, #00d2ff);
+  color: #333;
+}
+
+/* Container styles */
+.container {
+  text-align: center;
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+}
+
+/* Heading and subtitle */
+h1 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: #007bff;
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin: 10px 0 20px;
+  color: #666;
+}
+
+/* Input field styles */
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+textarea.input-field {
+  resize: none;
+  height: 80px;
+}
+
+/* Star styles */
+.stars {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.star {
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.star.selected {
+  color: #f4d03f;
+}
+
+.star:hover {
+  transform: scale(1.2);
+  color: #f4d03f;
+}
+
+.star:hover ~ .star {
+  transform: scale(1.0);
+  color: #ccc;
+}
+
+/* Button styles */
+button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+button:active {
+  transform: scale(1.03);
+}
+
+/* Message styles */
+.message {
+  margin-top: 20px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .star {
+    font-size: 2rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .star {
+    font-size: 1.8rem;
+  }
+
+  button {
+    font-size: 0.8rem;
+    padding: 8px 18px;
+  }
+}
